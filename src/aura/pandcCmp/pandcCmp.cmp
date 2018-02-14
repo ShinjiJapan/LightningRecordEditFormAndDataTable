@@ -1,0 +1,33 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    <aura:attribute name="recordId" type="string" default="0017F00000QIBeRQAX"/>
+    <aura:attribute name="sObject" type="string" default="Account"/>
+    <aura:attribute name="iconName" type="string" default="standard:account"/>
+    <aura:attribute name="title" type="string" default="{!v.sObject}"/>
+    <aura:attribute name="buttonLabel" type="string" default="save"/>
+    <aura:attribute name="fields" type="list" default="Name,Type,ParentId,AnnualRevenue,Phone,Website"/>
+    <aura:attribute name="childIconName" type="string" default="standard:contact_list"/>
+    <aura:attribute name="childSObject" type="string" default="Contact"/>
+    <aura:attribute name="childTitle" type="string" default="{!v.childSObject}"/>
+    <aura:attribute name="relationField" type="string" default="accountId"/>
+    <aura:attribute name="childFields" type="list" default="['Id','Name','Email']"/>
+    <aura:if isTrue="{!v.recordId != ''}">
+        <lightning:card title="{!v.title}" iconName="{!v.iconName}">
+            <lightning:recordEditForm recordId="{!v.recordId}" objectApiName="{!v.sObject}" onsuccess="{!c.onSaveSuccess}">
+                <lightning:messages />
+                <lightning:layout multipleRows="true">
+                    <aura:iteration items="{!v.fields}" var="field">
+                        <lightning:layoutItem flexibility="auto" padding="around-small">
+                            <lightning:inputField fieldName="{!field}" />
+                        </lightning:layoutItem>
+                    </aura:iteration>
+                </lightning:layout>
+                <lightning:button class="slds-m-left--small" variant="brand" type="submit" name="update" label="{!v.buttonLabel}" iconName="utility:save" />
+            </lightning:recordEditForm>
+        </lightning:card>
+        <aura:if isTrue="{!v.childSObject != ''}">
+            <lightning:card title="{!v.childTitle}" iconName="standard:contact_list">
+                <c:DataTableWrapper sObject="{!v.childSObject}" relationField="{!v.relationField}" fields="{!v.childFields}" parentId="{!v.recordId}"/>
+            </lightning:card>
+        </aura:if>
+    </aura:if>
+</aura:component>

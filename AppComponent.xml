@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ComponentDefinition 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="AppComponent_Schema.xsd" version="1.0">
+	<!-- パッケージのタイトル。ガジェットの取り込みメニューで使用されるアイコンや説明など -->
+	<!-- パッケージのタイトル -->
+	<Title>Lightning親子表示用</Title>
+	<!-- パッケージの説明 -->
+	<Description>Lightning:recordEditFormとLightninig:dataTable</Description>
+	<!-- パッケージの発行元 -->
+	<Publisher>TerraSky</Publisher>
+	<!-- パッケージのアイコン -->
+	<!-- resourceName メニューで表示される、パッケージのアイコン。 -->
+	<PackageImage resourceName="icon"/>
+	<!-- //TODO定義のバージョンを入れとく？ -->
+	<WebSite>http://www.terrasky.co.jp/</WebSite>
+	<!-- ガジェット定義。一つのXML内に、複数個定義できる -->
+	<AppComponents>
+		<AppComponent name="MyLightningComponent">
+			<Title>Lightning親子表示</Title>
+			<Description>Lightning:recordEditFormとLightninig:dataTable</Description>
+			<Layout>inline</Layout>
+			<Height value="50" maxValue="100" minValue="50" resizable="false"/>
+			<Width value="50" maxValue="100" minValue="50" resizable="false"/>
+			<ComponentImage resourceName="icon"/>
+			<CanvasImage resourceName="icon" stretch="Fill" />
+			<PutablePlaces anyPlace="true"></PutablePlaces>
+			<DirectComponent>
+				<DirectComponentBody>
+					<![CDATA[
+		<div><apex:includeLightning /><div id="lightning" /><script>
+		        var fields = JSON.parse('["'+'{!currentAppProperties['prop_Fields']}'.replace('[','').replace(']','').replace(/ /g,'').split(',').join('","') + '"]');
+		        var childFields = JSON.parse('["'+'{!currentAppProperties['prop_ChildSObject']}'.replace('[','').replace(']','').replace(/ /g,'').split(',').join('","') + '"]');
+		        $Lightning.use("pandc:pandcApp", function() {
+		          $Lightning.createComponent("pandc:pandcCmp",
+		          {sObject:SkyEditor.mainObject,iconName:"{!currentAppProperties['prop_IconName']}",fields:fields, recordId:"{!record.Id}",
+		          buttonLabel:"{!currentAppProperties['prop_buttonLabel']}",
+		          title:"{!currentAppProperties['prop_Title']}",
+		          childTitle:"{!currentAppProperties['prop_childTitle']}",
+		          childIconName:"{!currentAppProperties['prop_childIconName']}",
+		          childSObject:"{!currentAppProperties['prop_ChildSObject.sObject']}",
+		          relationField:"{!currentAppProperties['prop_ChildSObject.rField']}",
+		          childFields:childFields},
+		          "lightning",
+		          function(cmp) {
+		          });
+		        });
+		    </script></div>
+		    ]]>
+				</DirectComponentBody>
+			</DirectComponent>
+			<Properties>
+				<String name="prop_IconName" label="親アイコン名" maxLength="255" defaultValue="standard:account"/>
+				<String name="prop_Title" label="親タイトル" maxLength="255" defaultValue=""/>
+				<ParentSObjectColumns name="prop_Fields" label="主オブジェクト項目" isRequired="true"/>
+				<String name="prop_buttonLabel" label="保存ボタンラベル" isRequired="true" maxLength="255" defaultValue="保存"/>
+				<String name="prop_childIconName" label="子アイコン名" maxLength="255" defaultValue="standard:contact_list"/>
+				<String name="prop_childTitle" label="子オブジェクトタイトル" maxLength="255" defaultValue=""/>
+				<ChildSObjectColumns name="prop_ChildSObject" label="子オブジェクト項目"/>
+			</Properties>
+		</AppComponent>
+	</AppComponents>
+</ComponentDefinition>

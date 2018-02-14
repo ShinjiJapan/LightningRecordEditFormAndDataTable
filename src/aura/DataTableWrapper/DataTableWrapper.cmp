@@ -1,0 +1,21 @@
+<aura:component controller="DataTableWrapperController">
+    <aura:attribute name="parentId" type="string"/>
+    <aura:attribute name="sObject" type="string"/>
+    <aura:attribute name="relationField" type="string"/>
+    <aura:attribute name="fields" type="list"/>
+    <aura:attribute name="sortedBy" type="string" default="Name"/>
+    <aura:attribute name="sortedDirection" type="string" default="asc" />
+    <aura:attribute name="records" type="object" />
+    <aura:attribute name="columns" type="object" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.getSfData}" />
+
+    <lightning:datatable data="{!v.records}"
+        columns="{!v.columns}" 
+        onsort="{!c.updateColumnSorting}"
+        sortedBy="{!v.sortedBy}" 
+        sortedDirection="{!v.sortedDirection}"
+        onrowaction="{! c.handleRowAction }"
+        hideCheckboxColumn="true"
+        keyField="Id" />
+</aura:component>
